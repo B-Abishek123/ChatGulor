@@ -1,0 +1,16 @@
+agno
+sqlalchemy
+openai
+google-genai
+groq
+google-api-python-client 
+google-auth-httplib2 
+google-auth-oauthlib
+mistralai
+duckduckgo-search
+python-telegram-bot
+telegram
+whatsapp-python
+Flask 
+requests
+discord
