@@ -13,6 +13,7 @@ WHATSAPP_ACCESS_TOKEN
 DISCORD_BOT_TOKEN
 DISCORD_CHANNEL_ID
 
-Also replace with your own data in the system prompt section.
+Also replace with your own data in the instruction section.
 
+Please go through the code for other variables to be changed.
 For other information, contact me: abwebs21@gmail.com
