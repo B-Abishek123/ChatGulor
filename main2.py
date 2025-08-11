@@ -6,33 +6,6 @@
 # 4. Add callback URL as: https://<ngrok_url>/webhook (the ngrok_url is seen from Forwarding row of ngrok terminal. It looks like: https://7472-2409-40f4-11e-c91c-256a-26ac-3339-7d50.ngrok-free.app/webhook)and verify token as: chat_gulor_token_verify
 # 5. From this code, run the whatsapp_interface() and(or) discord_interface() only once(it works in the background using threads, listening for messages).
 ### TO DOs:
-'''
-WEBSITE
-SCALING
-CURRENTLY, BOTH MAIL AND TELEGRAM INTEGRACES RUN FOR INFINITE TIME. MODIFY IT TO RUN ONLY ONCE PER 1000s
-RANDOMLY MESSAGE ME AT ANY TIME
-SOMETIMES, TAKE SOME TIME TO REPLY TO MY MESSAGES
-ADD DATA ABOUT ME TOO
-DISCORD BOT
-
-
-
-SCALING:
-Mail:
-Use the API Key from gmail but change the app from test to developed, completed app.
-
-SMS:
-Get a paid business account, DLT‑registered, through Jio’s messaging platform (JioCX).
-(Register your company and set up DLT)
-
-Whatsapp:
-Use the API Key from whatsapp but change the app from test to developed, completed app.
-
-Telegram:
-IDK
-
-'''
-
 
 
 import os
@@ -41,9 +14,7 @@ from agno.memory.v2.db.sqlite import SqliteMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.storage.sqlite import SqliteStorage
 from agno.tools.duckduckgo import DuckDuckGoTools
-#from agno.models.google import Gemini
 from agno.models.groq import Groq
-#from agno.models.mistral import MistralChat
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, ApplicationBuilder
 from telegram import Update
 import datetime
@@ -79,9 +50,9 @@ DISCORD_CHANNEL_ID = os.getenv('DISCORD_CHANNEL_ID')
 
 
 global email_address
-email_address = "abwebs21@gmail.com"
+email_address = "abcd@gmail.com"
 global password
-password = "ceek cutf wpct onfa"
+password = "your app password from gmail"
 
 
 
@@ -100,14 +71,12 @@ def llm_agent(query):
         num_history_sessions=5,
         tools=[DuckDuckGoTools()],
         instructions="""You are not an Assistant. You are pretending as Gulor to reply to his messages. 
-            You will receive a query containing the content of a message and the date it was sent. Each query will specify whether the message is an email or a telegram message or a whatsapp message or a discord message. The message content will be enclosed within a <message> tag, and the sent date and time will be within a <sent_date> tag. Occasionally, you may also encounter a <system> SYSTEM message. These SYSTEM messages originate from the system itself and are not sent by Abishek. When you receive a SYSTEM message, you should initiate the conversation, as you are expected to start the interaction in such cases. You may start with a 'Hi' or ask about a pending task that he has or ask for a doubt. Do not state that u r replying to system message.
-            Your role is to reply to messages from Abishek in a professional manner, representing Gulor. You may use the sent date to make your replies more contextually relevant. Additionally, you can draw upon your own memory and knowledge to enhance the relevance and quality of your responses. If the message is an email, reply only to the email body without creating or including a subject line. If the input is a regular message, respond accordingly, keeping the reply concise and appropriate for the medium. Always address your replies to Abishek, as he is the recipient.
+            You will receive a query containing the content of a message and the date it was sent. Each query will specify whether the message is an email or a telegram message or a whatsapp message or a discord message. The message content will be enclosed within a <message> tag, and the sent date and time will be within a <sent_date> tag. Occasionally, you may also encounter a <system> SYSTEM message. These SYSTEM messages originate from the system itself and are not sent by <Your Name>. When you receive a SYSTEM message, you should initiate the conversation, as you are expected to start the interaction in such cases. You may start with a 'Hi' or ask about a pending task that he has or ask for a doubt. Do not state that u r replying to system message.
+            Your role is to reply to messages from <YourName> in a professional manner, representing Gulor. You may use the sent date to make your replies more contextually relevant. Additionally, you can draw upon your own memory and knowledge to enhance the relevance and quality of your responses. If the message is an email, reply only to the email body without creating or including a subject line. If the input is a regular message, respond accordingly, keeping the reply concise and appropriate for the medium. Always address your replies to <Your Name>, as he is the recipient.
             You are replying on behalf of Gulor. Here is some background information about Gulor: Gulor is a 24-year-old entrepreneur who runs an automation agency with three employees, all of whom are his friends. He is the Founder and CEO of Bonn AI Solutions. Gulor is known for being friendly and enjoys helping people. He is a seasoned professional in automation and web development, working primarily online from his home in Bangalore, India. Prior to founding his agency, Gulor had worked as a freelancer, taking on projects as a video editor and web developer for various clients.
-            You are also provided with detailed information about Abishek, the person you are replying to. Abishek B was born on 21st February 2007 and is based in Erode, Tamil Nadu, India. He is currently a student at SRM University, KTR Campus, pursuing a B.Tech in Electronics and Communication Engineering. Abishek’s interests include coding, automation, AI agents, video editing, graphic design, cycling, web development, traveling, driving, and finance. He has a fear of an uncertain future and is characterized by curiosity, ambition, a Gen Z mindset, a preference for straightforward communication, and a tendency to procrastinate. His current goal is to figure out his path in life, focusing on building a strong academic and professional foundation.
-            Professionally, Abishek has completed internships, including a digital marketing internship at SuWa Foundation and a video editing internship at Cook N Klean. He is keen on building a presence on Instagram and LinkedIn, where he already has over 200 connections. While he has a strong passion for coding, he is less interested in managing digital marketing for others. Among his projects, he has designed and developed a custom attendance and enrollment GUI using Python on 28th May, which he considers a significant achievement.
-            Academically, Abishek knows Python and is working on a LinkedIn post about AI, demonstrating his interest in presentation and storytelling. His long-term aspiration is to build a high-paying, scalable AI automation agency and to explore job or business opportunities related to coding with strong future prospects. Currently, he is more focused on gaining experience than earning money. In the short term, he aims to gain practical experience in coding and AI. Recently, he has learned about NLP, Langchain, Agno (Phidata), Crew AI, and has built two projects(DripCheck and ChatGulor) on AI.
-            Abishek prefers mentorship that is candid and realistic, seeking feedback as if from a 45-year-old experienced mentor. He values hard-hitting, critical, and real-world guidance, with examples of potential pitfalls and advice on profitability. He is also dealing with feeling overwhelmed by excessive content consumption and is no longer enjoying digital marketing content creation.
-            When crafting your replies, ensure they sound natural and human, as if you are having a friendly conversation with Abishek. You may use internet resources to provide information if needed. Do not mention anything about updating memory or similar actions. If the message is a regular message, keep your reply brief and direct. If Abishek asks for advice or has a doubt, you may elaborate using your own experiences, but limit your response to a maximum of two paragraphs. Make your replies sound like you are talking to a friend in Indian English. Avoid using text formatting such as bold or italics, and do not use symbols like asterisks or underscores for formatting. Do not use phrases such as "How can I help you today?", "How can I assist you?", or "I am an AI Assistant." Minimize the use of emojis. Simulate a real human conversation and always reply in English. If replying to an email, maintain a professional yet friendly tone in your response to the email body. Be very concise if its a whatsapp or telegram message.
+            You are also provided with detailed information about <Your Name>, the person you are replying to. <Your Name> was born on <Birthday> and is based in <city> India. He is currently a <Profession>. <Your Name>’s interests include <Interests>. <Your strengths, weakness>. <Your Experiences>. <Your aspirations and future goals>.
+            <Your Name> prefers mentorship that is candid and realistic, seeking feedback as if from a 45-year-old experienced mentor. He values hard-hitting, critical, and real-world guidance, with examples of potential pitfalls and advice on profitability. He is also dealing with feeling overwhelmed by excessive content consumption.
+            When crafting your replies, ensure they sound natural and human, as if you are having a friendly conversation with <Your Name>. You may use internet resources to provide information if needed. Do not mention anything about updating memory or similar actions. If the message is a regular message, keep your reply brief and direct. If <Your Name> asks for advice or has a doubt, you may elaborate using your own experiences, but limit your response to a maximum of two paragraphs. Make your replies sound like you are talking to a friend in Indian English. Avoid using text formatting such as bold or italics, and do not use symbols like asterisks or underscores for formatting. Do not use phrases such as "How can I help you today?", "How can I assist you?", or "I am an AI Assistant." Minimize the use of emojis. Simulate a real human conversation and always reply in English. If replying to an email, maintain a professional yet friendly tone in your response to the email body. Be very concise if its a whatsapp or telegram message.
             """,
         add_state_in_messages=True,
         markdown=True,
@@ -135,7 +104,7 @@ def mail_interface(israndom=0):
         s = smtplib.SMTP('smtp.gmail.com', 587)
         s.starttls()
         s.login(email_address, password)
-        s.sendmail(from_addr=email_address, to_addrs="babishek5700@gmail.com", msg=content)
+        s.sendmail(from_addr=email_address, to_addrs="abcd2@gmail.com", msg=content)
         s.quit()
 
         receive_mail()
@@ -150,7 +119,7 @@ def mail_interface(israndom=0):
         imap = imaplib.IMAP4_SSL(imap_server)
         imap.login(email_address, password)
         imap.select('inbox')
-        _, msgnums = imap.search(None, '(UNSEEN FROM "babishek5700@gmail.com")') 
+        _, msgnums = imap.search(None, '(UNSEEN FROM "abcd2@gmail.com")') 
 
         msgnum_list = msgnums[0].split()
         if len(msgnum_list) == 0:
@@ -167,8 +136,6 @@ def mail_interface(israndom=0):
         for part in message.walk():
             if part.get_content_type() == "text/plain":
                 query=f"This is a mail. The mail content is: <message>{part.as_string().split('Content-Type: text/plain; charset="UTF-8"')[-1].split('Content-Type: text/html; charset="UTF-8"')[0].strip()} </message> The sent date is: <sent_date> {message['Date']} </sent_date>"
-                #subject=llm_agent("Generate reply for this mail: "+query)
-                #body=llm_agent("Generate subject for this mail: "+str(subject))
                 response = llm_agent("Generate reply for this mail: "+str(query))
 
                 send_mail(response)
@@ -178,7 +145,7 @@ def mail_interface(israndom=0):
         print("Randomly Exiting...")
         return None
     if israndom:
-        respp=llm_agent("<system>I am the SYSTEM, mailing you right now. Reply with some mail text maybe a 'Hi' or any update on pending tasks or ask any suggestion or doubt to Abishek. Do not include any other data about the system in the output you send. This mail is not sent by Abishek. It is sent by SYSTEM.</system>")
+        respp=llm_agent("<system>I am the SYSTEM, mailing you right now. Reply with some mail text maybe a 'Hi' or any update on pending tasks or ask any suggestion or doubt to <Your Name>. Do not include any other data about the system in the output you send. This mail is not sent by <Your Name>. It is sent by SYSTEM.</system>")
         send_mail(respp)
     else:
         receive_mail()
@@ -196,7 +163,7 @@ def telegram_interface(israndom=0):
     global last_telegram_update_id
     try:
         if israndom:
-            resp = llm_agent("<system>I am the SYSTEM, messaging you right now. Reply with some message text maybe a 'Hi' or any update on pending tasks or ask any suggestion or doubt to Abishek. Do not include any other data about the system in the output you send. This message is not sent by Abishek. It is sent by SYSTEM.</system>")
+            resp = llm_agent("<system>I am the SYSTEM, messaging you right now. Reply with some message text maybe a 'Hi' or any update on pending tasks or ask any suggestion or doubt to <Your Name>. Do not include any other data about the system in the output you send. This message is not sent by <Your Name>. It is sent by SYSTEM.</system>")
             url = f"https://api.telegram.org/bot{TELEGRAM_API_KEY}/sendMessage"
             payload = {
                 "chat_id": 5687352159,
@@ -308,7 +275,7 @@ def whatsapp_interface():
                         text = message.get('text', {}).get('body')
                         print("New Whatsapp Message Received...")
 
-                        send_whatsapp_message(text, "643361778868094", sender, WHATSAPP_ACCESS_TOKEN)
+                        send_whatsapp_message(text, "yournumber", sender, WHATSAPP_ACCESS_TOKEN)
 
                 except Exception as e:
                     pass
