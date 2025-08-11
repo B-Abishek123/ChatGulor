@@ -5,7 +5,6 @@
 # 3. Go to https://developers.facebook.com/apps/2128597717566467/whatsapp-business/wa-settings/?business_id=1052322746997515&phone_number_id= 
 # 4. Add callback URL as: https://<ngrok_url>/webhook (the ngrok_url is seen from Forwarding row of ngrok terminal. It looks like: https://7472-2409-40f4-11e-c91c-256a-26ac-3339-7d50.ngrok-free.app/webhook)and verify token as: chat_gulor_token_verify
 # 5. From this code, run the whatsapp_interface() and(or) discord_interface() only once(it works in the background using threads, listening for messages).
-### TO DOs:
 
 
 import os
@@ -166,7 +165,7 @@ def telegram_interface(israndom=0):
             resp = llm_agent("<system>I am the SYSTEM, messaging you right now. Reply with some message text maybe a 'Hi' or any update on pending tasks or ask any suggestion or doubt to <Your Name>. Do not include any other data about the system in the output you send. This message is not sent by <Your Name>. It is sent by SYSTEM.</system>")
             url = f"https://api.telegram.org/bot{TELEGRAM_API_KEY}/sendMessage"
             payload = {
-                "chat_id": 5687352159,
+                "chat_id": "yourchatid in integer format",
                 "text": str(resp)
             }
             requests.post(url, data=payload)
@@ -252,7 +251,7 @@ def whatsapp_interface():
                 mode = request.args.get('hub.mode')
                 token = request.args.get('hub.verify_token')
                 challenge = request.args.get('hub.challenge')
-                if mode == 'subscribe' and token == "chat_gulor_token_verify":
+                if mode == 'subscribe' and token == "yourtoken":
                     return challenge, 200
                 else:
                     return "Verification token mismatch", 403
